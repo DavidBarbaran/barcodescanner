@@ -32,7 +32,7 @@ interface IViewFinder {
      *
      * @return [Rect] that identifies barcode scanner area
      */
-    fun getFramingRect(): Rect
+    fun getFramingRect(): Rect?
 
     /**
      * Width of a [android.view.View] that implements this interface
