@@ -177,7 +177,7 @@ abstract class BarcodeScannerView : FrameLayout, Camera.PreviewCallback {
         mCameraHandlerThread?.startCamera(cameraId)
     }
 
-    fun setupCameraPreview(cameraWrapper: CameraWrapper) {
+    fun setupCameraPreview(cameraWrapper: CameraWrapper?) {
         mCameraWrapper = cameraWrapper
         mCameraWrapper?.let {
             setupLayout(it)
