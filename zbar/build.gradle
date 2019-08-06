@@ -11,9 +11,9 @@ ext {
 }
 
 dependencies {
-//    api project(":core")
-    api libraries.barcodescanner_core
-    api fileTree(dir: 'libs', include: '*.jar')
+    implementation project(":core")
+    //implementation libraries.barcodescanner_core
+    implementation fileTree(dir: 'libs', include: '*.jar')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 repositories {

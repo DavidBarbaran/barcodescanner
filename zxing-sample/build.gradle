@@ -3,12 +3,13 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
 
 dependencies {
-//    implementation project(":zxing")
-    implementation libraries.barcodescanner_zxing
+    implementation project(":zxing")
+    //implementation libraries.barcodescanner_zxing
     implementation libraries.support_v4
     implementation libraries.appcompat_v7
     implementation libraries.design_support
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation project(':core')
 }
 
 android {

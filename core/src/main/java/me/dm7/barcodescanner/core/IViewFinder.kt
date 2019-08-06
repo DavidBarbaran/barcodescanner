@@ -1,8 +1,8 @@
-package me.dm7.barcodescanner.core;
+package me.dm7.barcodescanner.core
 
 import android.graphics.Rect
 
-interface IViewFinder {
+ interface IViewFinder {
 
     fun setLaserColor(laserColor: Int)
     fun setMaskColor(maskColor: Int)

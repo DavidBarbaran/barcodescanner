@@ -7,7 +7,7 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
 
-class ViewFinderView : View, IViewFinder {
+open class ViewFinderView : View, IViewFinder {
 
     constructor(context: Context?) : super(context)
 

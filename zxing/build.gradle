@@ -11,8 +11,8 @@ ext {
 }
 
 dependencies {
-//    api project(":core")
-    api libraries.barcodescanner_core
+    implementation project(":core")
+    //api libraries.barcodescanner_core
     api libraries.zxing_core
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }

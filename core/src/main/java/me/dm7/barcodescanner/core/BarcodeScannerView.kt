@@ -14,7 +14,7 @@ abstract class BarcodeScannerView : FrameLayout, Camera.PreviewCallback {
 
     private var mCameraWrapper: CameraWrapper? = null
     private var mPreview: CameraPreview? = null
-    private var mViewFinderView: IViewFinder = createViewFinderView(context)
+    var mViewFinderView: IViewFinder? = null
     private var mFramingRectInPreview: Rect? = null
     private var mCameraHandlerThread: CameraHandlerThread? = null
     private var mFlashState: Boolean? = null
@@ -61,6 +61,10 @@ abstract class BarcodeScannerView : FrameLayout, Camera.PreviewCallback {
         }
     }
 
+    init {
+        mViewFinderView = createViewFinderView(context)
+    }
+
     fun setupLayout(cameraWrapper: CameraWrapper) {
         removeAllViews()
 
@@ -94,7 +98,7 @@ abstract class BarcodeScannerView : FrameLayout, Camera.PreviewCallback {
      * @return {@link android.view.View} that implements {@link ViewFinderView}
      */
 
-    protected fun createViewFinderView(context: Context): IViewFinder {
+    open fun createViewFinderView(context: Context): IViewFinder {
         val viewFinderView = ViewFinderView(context)
         viewFinderView.setBorderColor(mBorderColor)
         viewFinderView.setLaserColor(mLaserColor)
@@ -112,62 +116,62 @@ abstract class BarcodeScannerView : FrameLayout, Camera.PreviewCallback {
 
     fun setLaserColor(laserColor: Int) {
         mLaserColor = laserColor
-        mViewFinderView.setLaserColor(mLaserColor)
-        mViewFinderView.setupViewFinder()
+        mViewFinderView?.setLaserColor(mLaserColor)
+        mViewFinderView?.setupViewFinder()
     }
 
     fun setMaskColor(maskColor: Int) {
         mMaskColor = maskColor
-        mViewFinderView.setMaskColor(mMaskColor)
-        mViewFinderView.setupViewFinder()
+        mViewFinderView?.setMaskColor(mMaskColor)
+        mViewFinderView?.setupViewFinder()
     }
 
     fun setBorderColor(borderColor: Int) {
         mBorderColor = borderColor
-        mViewFinderView.setBorderColor(mBorderColor)
-        mViewFinderView.setupViewFinder()
+        mViewFinderView?.setBorderColor(mBorderColor)
+        mViewFinderView?.setupViewFinder()
     }
 
     fun setBorderStrokeWidth(borderStrokeWidth: Int) {
         mBorderWidth = borderStrokeWidth
-        mViewFinderView.setBorderStrokeWidth(mBorderWidth)
-        mViewFinderView.setupViewFinder()
+        mViewFinderView?.setBorderStrokeWidth(mBorderWidth)
+        mViewFinderView?.setupViewFinder()
     }
 
     fun setBorderLineLength(borderLineLength: Int) {
         mBorderLength = borderLineLength
-        mViewFinderView.setBorderLineLength(mBorderLength)
-        mViewFinderView.setupViewFinder()
+        mViewFinderView?.setBorderLineLength(mBorderLength)
+        mViewFinderView?.setupViewFinder()
     }
 
     fun setLaserEnabled(isLaserEnabled: Boolean) {
         mIsLaserEnabled = isLaserEnabled
-        mViewFinderView.setLaserEnabled(mIsLaserEnabled)
-        mViewFinderView.setupViewFinder()
+        mViewFinderView?.setLaserEnabled(mIsLaserEnabled)
+        mViewFinderView?.setupViewFinder()
     }
 
     fun setIsBorderCornerRounded(isBorderCornerRounded: Boolean) {
         mRoundedCorner = isBorderCornerRounded
-        mViewFinderView.setBorderCornerRounded(mRoundedCorner)
-        mViewFinderView.setupViewFinder()
+        mViewFinderView?.setBorderCornerRounded(mRoundedCorner)
+        mViewFinderView?.setupViewFinder()
     }
 
     fun setBorderCornerRadius(borderCornerRadius: Int) {
         mCornerRadius = borderCornerRadius
-        mViewFinderView.setBorderCornerRadius(mCornerRadius)
-        mViewFinderView.setupViewFinder()
+        mViewFinderView?.setBorderCornerRadius(mCornerRadius)
+        mViewFinderView?.setupViewFinder()
     }
 
     fun setSquareViewFinder(isSquareViewFinder: Boolean) {
         mSquaredFinder = isSquareViewFinder
-        mViewFinderView.setSquareViewFinder(mSquaredFinder)
-        mViewFinderView.setupViewFinder()
+        mViewFinderView?.setSquareViewFinder(mSquaredFinder)
+        mViewFinderView?.setupViewFinder()
     }
 
     fun setBorderAlpha(borderAlpha: Float) {
         mBorderAlpha = borderAlpha
-        mViewFinderView.setBorderAlpha(mBorderAlpha)
-        mViewFinderView.setupViewFinder()
+        mViewFinderView?.setBorderAlpha(mBorderAlpha)
+        mViewFinderView?.setupViewFinder()
     }
 
     fun startCamera(cameraId: Int) {
@@ -181,7 +185,7 @@ abstract class BarcodeScannerView : FrameLayout, Camera.PreviewCallback {
         mCameraWrapper = cameraWrapper
         mCameraWrapper?.let {
             setupLayout(it)
-            mViewFinderView.setupViewFinder()
+            mViewFinderView?.setupViewFinder()
             mFlashState?.let { flashState ->
                 setFlash(flashState)
             }
@@ -223,9 +227,9 @@ abstract class BarcodeScannerView : FrameLayout, Camera.PreviewCallback {
     @Synchronized
     fun getFramingRectInPreview(previewWidth: Int, previewHeight: Int): Rect? {
         mFramingRectInPreview?.let {
-            val framingRect = mViewFinderView.getFramingRect()
-            val viewFinderViewWidth = mViewFinderView.getWidth()
-            val viewFinderViewHeight = mViewFinderView.getHeight()
+            val framingRect = mViewFinderView?.getFramingRect()
+            val viewFinderViewWidth = mViewFinderView?.getWidth()
+            val viewFinderViewHeight = mViewFinderView?.getHeight()
 
             if (framingRect == null || viewFinderViewWidth == 0 || viewFinderViewHeight == 0) {
                 return null
@@ -233,14 +237,19 @@ abstract class BarcodeScannerView : FrameLayout, Camera.PreviewCallback {
 
             val rect = Rect(framingRect)
 
-            if (previewWidth < viewFinderViewWidth) {
-                rect.left = rect.left * previewWidth / viewFinderViewWidth
-                rect.right = rect.right * previewWidth / viewFinderViewWidth
+
+            viewFinderViewWidth?.let {
+                if (previewWidth < it) {
+                    rect.left = rect.left * previewWidth / it
+                    rect.right = rect.right * previewWidth / it
+                }
             }
 
-            if (previewHeight < viewFinderViewHeight) {
-                rect.top = rect.top * previewHeight / viewFinderViewHeight
-                rect.bottom = rect.bottom * previewHeight / viewFinderViewHeight
+            viewFinderViewHeight?.let {
+                if (previewHeight < it) {
+                    rect.top = rect.top * previewHeight / it
+                    rect.bottom = rect.bottom * previewHeight / it
+                }
             }
 
             mFramingRectInPreview = rect
@@ -303,21 +312,21 @@ abstract class BarcodeScannerView : FrameLayout, Camera.PreviewCallback {
         mAspectTolerance = aspectTolerance
     }
 
-    fun getRotatedData(data: ByteArray, camera: Camera): ByteArray {
+    fun getRotatedData(data: ByteArray?, camera: Camera?): ByteArray? {
         var data = data
-        val parameters = camera.parameters
-        val size = parameters.previewSize
-        var width = size.width
-        var height = size.height
+        val parameters = camera?.parameters
+        val size = parameters?.previewSize
+        var width = size?.width ?: 0
+        var height = size?.height ?: 0
 
         val rotationCount = getRotationCount()
-        rotationCount?.let {
-            if (it == 1 || it == 3) {
-                for (i in 0 until it) {
-                    val rotatedData = ByteArray(data.size)
+        data?.let {
+            if (rotationCount == 1 || rotationCount == 3) {
+                for (i in 0 until rotationCount) {
+                    val rotatedData = ByteArray(it.size)
                     for (y in 0 until height) {
                         for (x in 0 until width)
-                            rotatedData[x * height + height - y - 1] = data[x + y * width]
+                            rotatedData[x * height + height - y - 1] = it[x + y * width]
                     }
                     data = rotatedData
                     val tmp = width
@@ -326,7 +335,6 @@ abstract class BarcodeScannerView : FrameLayout, Camera.PreviewCallback {
                 }
             }
         }
-
         return data
     }
 

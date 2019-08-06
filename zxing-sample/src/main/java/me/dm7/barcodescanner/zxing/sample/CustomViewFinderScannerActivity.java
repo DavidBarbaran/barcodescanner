@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.google.zxing.Result;
 
+
 import me.dm7.barcodescanner.core.IViewFinder;
 import me.dm7.barcodescanner.core.ViewFinderView;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
@@ -30,7 +31,7 @@ public class CustomViewFinderScannerActivity extends BaseScannerActivity impleme
         ViewGroup contentFrame = (ViewGroup) findViewById(R.id.content_frame);
         mScannerView = new ZXingScannerView(this) {
             @Override
-            protected IViewFinder createViewFinderView(Context context) {
+            public IViewFinder createViewFinderView(Context context) {
                 return new CustomViewFinderView(context);
             }
         };
